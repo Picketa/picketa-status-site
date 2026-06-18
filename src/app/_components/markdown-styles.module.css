@@ -71,6 +71,12 @@
   @apply w-full my-8 border-collapse;
 }
 
+/* Hide the header row of key/value tables whose header cells are all empty
+   (e.g. a leading `| | |` row), while keeping real headers like the timeline. */
+.markdown thead:not(:has(th:not(:empty))) {
+  @apply hidden;
+}
+
 .markdown th {
   @apply px-4 py-2 border font-semibold text-left;
 }
