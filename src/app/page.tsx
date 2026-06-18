@@ -1,29 +1,51 @@
 import Container from "@/app/_components/container";
-import { HeroPost } from "@/app/_components/hero-post";
 import { Intro } from "@/app/_components/intro";
-import { MoreStories } from "@/app/_components/more-stories";
-import { getAllPosts } from "@/lib/api";
+import { StatusBanner } from "@/app/_components/status-banner";
+import { SystemStatus } from "@/app/_components/system-status";
+import { IncidentList } from "@/app/_components/incident-list";
+import { SYSTEMS } from "@/lib/constants";
+import {
+  getActiveIncidents,
+  getAllIncidents,
+  getLatestUpdate,
+  getOverallStatus,
+  getSystemCurrentStatus,
+  getSystemHistory,
+} from "@/lib/incidents";
 
 export default function Index() {
-  const allPosts = getAllPosts();
+  const overall = getOverallStatus();
+  const incidents = getAllIncidents();
 
-  const heroPost = allPosts[0];
+  const active = getActiveIncidents().map((incident) => ({
+    slug: incident.slug,
+    title: incident.title,
+    severity: incident.severity,
+    status: incident.status,
+    date: incident.date,
+    message: getLatestUpdate(incident.content).message,
+  }));
 
-  const morePosts = allPosts.slice(1);
+  const rows = SYSTEMS.map((system) => ({
+    system,
+    current: getSystemCurrentStatus(system),
+    days: getSystemHistory(system),
+  }));
 
   return (
     <main>
       <Container>
         <Intro />
-        <HeroPost
-          title={heroPost.title}
-          coverImage={heroPost.coverImage}
-          date={heroPost.date}
-          author={heroPost.author}
-          slug={heroPost.slug}
-          excerpt={heroPost.excerpt}
-        />
-        {morePosts.length > 0 && <MoreStories posts={morePosts} />}
+        <div className="max-w-4xl mx-auto mb-32 space-y-12">
+          <StatusBanner status={overall} active={active} />
+          <SystemStatus rows={rows} />
+          <section>
+            <h2 className="text-2xl font-bold text-neutral-900 dark:text-white mb-6">
+              Past Incidents
+            </h2>
+            <IncidentList incidents={incidents} />
+          </section>
+        </div>
       </Container>
     </main>
   );

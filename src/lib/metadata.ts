@@ -3,35 +3,10 @@ import { SITE_TITLE, SITE_DESCRIPTION, SITE_URL,DEFAULT_OG_TITLE, DEFAULT_OG_DES
 
 export type MetadataOverrides = Partial<Metadata>;
 
-function ensureAbsoluteUrl(url: string): string {
-  if (url.startsWith('http://') || url.startsWith('https://')) {
-    return url;
-  }
-  return `${SITE_URL}${url.startsWith('/') ? '' : '/'}${url}`;
-}
-
-export function generateOgImageUrl(params: {
-  title?: string;
-  authorName?: string;
-  authorPicture?: string;
-  authorRole?: string;
-  backgroundImage?: string;
-}): string {
+export function generateOgImageUrl(params: { title?: string }): string {
   const ogImageUrl = new URL('/api/og', SITE_URL);
   if (params.title) {
     ogImageUrl.searchParams.set('title', params.title);
-  }
-  if (params.authorName) {
-    ogImageUrl.searchParams.set('authorName', params.authorName);
-  }
-  if (params.authorPicture) {
-    ogImageUrl.searchParams.set('authorPicture', ensureAbsoluteUrl(params.authorPicture));
-  }
-  if (params.authorRole) {
-    ogImageUrl.searchParams.set('authorRole', params.authorRole);
-  }
-  if (params.backgroundImage) {
-    ogImageUrl.searchParams.set('backgroundImage', ensureAbsoluteUrl(params.backgroundImage));
   }
   return ogImageUrl.toString();
 }
@@ -40,7 +15,7 @@ export function generateMetadata(overrides: MetadataOverrides = {}): Metadata {
   const defaultMetadata: Metadata = {
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
-    keywords: "Picketa, developer, blog, API, documentation, agriculture, technology, engineering, picketa.com",
+    keywords: "Picketa, status, incidents, uptime, post-mortem, Fieldbook, LENS, agriculture, technology, picketa.com",
     openGraph: {
       title: DEFAULT_OG_TITLE,
       description: DEFAULT_OG_DESCRIPTION,

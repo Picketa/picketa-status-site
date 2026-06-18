@@ -1,6 +1,6 @@
 import { ImageResponse } from '@vercel/og';
 import { NextRequest } from 'next/server';
-import { DEFAULT_OG_TITLE, DEFAULT_OG_DESCRIPTION } from '@/lib/constants';
+import { DEFAULT_OG_TITLE } from '@/lib/constants';
 import SmallLogo from './small-logo';
 
 export const runtime = 'edge';
@@ -10,15 +10,6 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
 
     const title = searchParams.get('title') || DEFAULT_OG_TITLE;
-    const authorName = searchParams.get('authorName');
-    const authorPicture = searchParams.get('authorPicture');
-    const authorRole = searchParams.get('authorRole');
-    const backgroundImage = searchParams.get('backgroundImage');
-
-    // Determine the background style: use backgroundImage if provided, else use linear-gradient
-    const backgroundStyle = backgroundImage
-      ? `url(${backgroundImage})`
-      : 'linear-gradient(135deg, white 0%, #6bd07a 100%)';
 
     return new ImageResponse(
       (
@@ -28,8 +19,7 @@ export async function GET(req: NextRequest) {
             height: '100%',
             display: 'flex',
             flexDirection: 'column',
-            background: backgroundStyle,
-            ...(backgroundImage && { backgroundSize: 'cover' }),
+            background: 'linear-gradient(135deg, white 0%, #6bd07a 100%)',
             padding: '60px',
           }}
         >
@@ -37,28 +27,22 @@ export async function GET(req: NextRequest) {
             display: 'flex',
             flexDirection: 'column',
             flex: 1,
-            ...(backgroundImage && {
-              background: 'rgba(255, 255, 255, 0.85)',
-              padding: '40px',
-              borderRadius: '24px',
-            }),
           }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <SmallLogo width={140} height={140} />
-              <div style={{ 
-                marginLeft: '0.2em', 
+              <div style={{
+                marginLeft: '0.2em',
                 fontSize: '60px',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.2em'
               }}>
                 <strong style={{ color: '#1E1E1E' }}>Picketa</strong>
-                <strong style={{ color: '#666666' }}>for</strong>
-                <strong style={{ color: '#666666' }}>Developers</strong>
+                <strong style={{ color: '#666666' }}>Status</strong>
               </div>
             </div>
 
-            <div style={{ 
+            <div style={{
               display: 'flex',
               flexDirection: 'column',
               margin: 'auto',
@@ -67,7 +51,7 @@ export async function GET(req: NextRequest) {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-              <div style={{ 
+              <div style={{
                 fontSize: '48px',
                 color: '#1E1E1E',
                 lineHeight: 1.2,
@@ -76,46 +60,6 @@ export async function GET(req: NextRequest) {
                 {title}
               </div>
             </div>
-
-            {authorName && authorPicture && (
-              <div style={{ 
-                display: 'flex',
-                alignItems: 'center',
-                marginTop: '40px',
-              }}>
-                <img
-                  src={authorPicture}
-                  alt={authorName}
-                  style={{
-                    width: '96px',
-                    height: '96px',
-                    borderRadius: '50%',
-                  }}
-                />
-                <div style={{ 
-                  marginLeft: '12px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '4px'
-                }}>
-                  <span style={{ 
-                    fontSize: '36px',
-                    color: '#666666',
-                  }}>
-                    {authorName}
-                  </span>
-                  {authorRole && (
-                    <span style={{ 
-                      fontSize: '24px',
-                      color: '#666666',
-                      opacity: 0.8,
-                    }}>
-                      {authorRole}
-                    </span>
-                  )}
-                </div>
-              </div>
-            )}
           </div>
         </div>
       ),
