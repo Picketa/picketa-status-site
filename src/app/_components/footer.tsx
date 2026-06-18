@@ -17,10 +17,10 @@ export function Footer() {
               Picketa
             </a>
             <a
-              href="https://status.picketa.com/feed.xml"
+              href="/api/get-past-90-days"
               className="font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
-              RSS
+              JSON API
             </a>
           </div>
         </div>
