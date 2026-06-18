@@ -1,0 +1,21 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        # Amplify's image ships Corepack but no pnpm on PATH; activate the
+        # version pinned in package.json's "packageManager" field.
+        - corepack enable
+        - corepack prepare pnpm@9.5.0 --activate
+        - pnpm install --frozen-lockfile
+    build:
+      commands:
+        - pnpm run build
+  artifacts:
+    baseDirectory: .next
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - .next/cache/**/*
+      - node_modules/**/*
