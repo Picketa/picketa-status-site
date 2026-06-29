@@ -7,23 +7,22 @@ type Row = {
   system: System;
   current: Health;
   days: DayStatus[];
+  uptime: number | null;
 };
 
 type Props = {
   rows: Row[];
 };
 
-function uptimePercent(days: DayStatus[]): string {
-  const tracked = days.filter((d) => d.health !== "nodata");
-  if (tracked.length === 0) return "—";
-  const up = tracked.filter((d) => d.health === "operational").length;
-  return `${((up / tracked.length) * 100).toFixed(2)}% uptime`;
+function uptimeLabel(uptime: number | null): string {
+  if (uptime === null) return "—";
+  return `${uptime.toFixed(2)}% uptime`;
 }
 
 export function SystemStatus({ rows }: Props) {
   return (
     <section className="rounded-lg border border-neutral-200 dark:border-slate-700 divide-y divide-neutral-200 dark:divide-slate-700">
-      {rows.map(({ system, current, days }) => (
+      {rows.map(({ system, current, days, uptime }) => (
         <div key={system} className="p-5">
           <div className="flex items-center justify-between mb-3">
             <span className="font-medium text-neutral-900 dark:text-white">
@@ -38,7 +37,7 @@ export function SystemStatus({ rows }: Props) {
           <div className="flex justify-between items-center text-xs text-neutral-400 dark:text-slate-500 mt-2">
             <span>{days.length} days ago</span>
             <span className="font-medium text-neutral-500 dark:text-slate-400">
-              {uptimePercent(days)}
+              {uptimeLabel(uptime)}
             </span>
             <span>Today</span>
           </div>

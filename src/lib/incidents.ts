@@ -191,3 +191,41 @@ export function getAllSystemHistories(): { system: System; days: DayStatus[] }[]
     days: getSystemHistory(system),
   }));
 }
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * Uptime % for a system over the HISTORY_DAYS window, computed at minute
+ * granularity. Downtime is the real [start, resolved||now] duration of each
+ * affecting incident — clipped to the window and unioned so overlapping
+ * incidents aren't double-counted — not whole days. A 30-minute outage costs
+ * 30 minutes of uptime, not a full day.
+ */
+export function getSystemUptime(system: System): number | null {
+  const incidents = getAllIncidents().filter((i) =>
+    i.affected.includes(system)
+  );
+
+  const now = Date.now();
+  const windowStart = now - HISTORY_DAYS * DAY_MS;
+  const windowMs = now - windowStart;
+  if (windowMs <= 0) return null;
+
+  const intervals = incidents
+    .map((i) => ({
+      start: Math.max(new Date(i.date).getTime(), windowStart),
+      end: Math.min(i.resolved ? new Date(i.resolved).getTime() : now, now),
+    }))
+    .filter((iv) => iv.end > iv.start)
+    .sort((a, b) => a.start - b.start);
+
+  let downMs = 0;
+  let cursor = -Infinity;
+  for (const iv of intervals) {
+    const start = Math.max(iv.start, cursor);
+    if (iv.end > start) downMs += iv.end - start;
+    cursor = Math.max(cursor, iv.end);
+  }
+
+  return Math.round(((windowMs - downMs) / windowMs) * 10000) / 100;
+}

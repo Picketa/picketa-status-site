@@ -11,6 +11,7 @@ import {
   getOverallStatus,
   getSystemCurrentStatus,
   getSystemHistory,
+  getSystemUptime,
 } from "@/lib/incidents";
 
 export default function Index() {
@@ -30,6 +31,7 @@ export default function Index() {
     system,
     current: getSystemCurrentStatus(system),
     days: getSystemHistory(system),
+    uptime: getSystemUptime(system),
   }));
 
   return (

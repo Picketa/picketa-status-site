@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { DayStatus, Health } from "@/interfaces/incident";
+import { Health } from "@/interfaces/incident";
 import { SYSTEMS } from "@/lib/constants";
 import {
   getAllIncidents,
@@ -7,6 +7,7 @@ import {
   getOverallStatus,
   getSystemCurrentStatus,
   getSystemHistory,
+  getSystemUptime,
 } from "@/lib/incidents";
 
 // Static JSON, rebuilt with the site (incidents are markdown read at build time).
@@ -27,13 +28,6 @@ const DESCRIPTION: Record<Health, string> = {
   nodata: "Status unknown",
 };
 
-function uptimePercent(days: DayStatus[]): number | null {
-  const tracked = days.filter((d) => d.health !== "nodata");
-  if (tracked.length === 0) return null;
-  const up = tracked.filter((d) => d.health === "operational").length;
-  return Math.round((up / tracked.length) * 10000) / 100;
-}
-
 export async function GET() {
   const overall = getOverallStatus();
 
@@ -42,7 +36,7 @@ export async function GET() {
     return {
       name,
       ...PUBLIC_STATUS[getSystemCurrentStatus(name)],
-      uptime: uptimePercent(days),
+      uptime: getSystemUptime(name),
       history: days.map((d) => ({
         date: d.date,
         status: PUBLIC_STATUS[d.health].status,
