@@ -1,12 +1,23 @@
 ---
 title: "Scanned samples not appearing in Fieldbook"
 severity: SEV2
-status: investigating
+status: identified
 affected: ["Fieldbook", "Fieldbook API"]
 date: "2026-08-24T23:25:00-03:00"
 ---
 
-### Investigating — 23:25 ADT
+### Identified — Aug 25, 13:33 ADT
+
+We have partially recovered. Samples scanned from now on are being indexed
+again and are appearing in Fieldbook as expected.
+
+Samples scanned earlier in this incident have not come through yet. They are
+still held safely on our side, and we are working on getting them into
+Fieldbook. There is no need to re-scan them.
+
+We will post another update once those samples have been restored.
+
+### Investigating — Aug 24, 23:25 ADT
 
 We are looking into reports that samples scanned with LENS Desktop are confirmed
 as uploaded, but the results do not show up in Fieldbook afterwards.
