@@ -1,12 +1,22 @@
 ---
 title: "Scanned samples not appearing in Fieldbook"
 severity: SEV2
-status: identified
+status: resolved
 affected: ["Fieldbook", "Fieldbook API"]
 date: "2026-08-24T23:25:00-03:00"
+resolved: "2026-08-25T15:53:00-03:00"
 ---
 
-### Identified — Aug 25, 13:33 ADT
+### Resolved — Aug 25, 15:53 ADT
+
+Every sample scanned during this incident is now in Fieldbook, including the
+ones that had not come through earlier today. No scans were lost and nothing
+needs to be re-scanned.
+
+The incident is resolved. Thank you for your patience while we worked through
+it.
+
+### Monitoring — Aug 25, 13:33 ADT
 
 We have partially recovered. Samples scanned from now on are being indexed
 again and are appearing in Fieldbook as expected.
