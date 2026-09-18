@@ -14,6 +14,8 @@ import {
   getSystemUptime,
 } from "@/lib/incidents";
 
+export const dynamic = "force-dynamic";
+
 export default function Index() {
   const overall = getOverallStatus();
   const incidents = getAllIncidents();
